@@ -1,0 +1,56 @@
+version: '3.9'
+services:
+  keycloak-db:
+    image: postgres:latest
+    container_name: ${CONTAINER_ID_NAME?Variable not set}-keycloak-db
+    restart: unless-stopped
+    volumes:
+      - postgre_data:/var/lib/postgresql/data
+      - ./data/postgres:/docker-entrypoint-initdb.d
+    ports:
+      - ${POSTGRES_DB_EXPOSE_PORT?Variable not set}:${POSTGRES_DB_PORT?Variable not set} # expose to 5434
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB_SERVER?Variable not set}
+      POSTGRES_USER: ${POSTGRES_DB_API_USER?Variable not set}
+      POSTGRES_PASSWORD: ${POSTGRES_DB_API_PASSWORD?Variable not set}
+      POSTGRES_DB_EXPOSE_PORT: ${POSTGRES_DB_EXPOSE_PORT?Variable not set}
+      POSTGRES_DB_API: ${POSTGRES_DB_API?Variable not set}
+      POSTGRES_DB_API_USER: ${POSTGRES_DB_API_USER?Variable not set}
+      POSTGRES_DB_API_PASSWORD: ${POSTGRES_DB_API?Variable not set}
+      TZ: "Asia/Jakarta" # Add timezone
+
+  api:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: ${CONTAINER_ID_NAME?Variable not set}-api
+    volumes:
+      - ./app:/app
+    restart: unless-stopped
+    #command: tail -f /dev/null
+    command: /start.sh
+    ports:
+      - ${API_HTTP_EXPOSE_PORT?Variable not set}:${API_HTTP_PORT?Variable not set}
+    environment:
+      - PROJECT_NAME=${PROJECT_NAME?Variable not set}
+      # DB variable on app/config.py
+      - POSTGRES_DB_SERVER=${POSTGRES_DB_SERVER?Variable not set}
+      - POSTGRES_DB_PORT=${POSTGRES_DB_PORT?Variable not set}
+      - POSTGRES_DB_EXPOSE_PORT=${POSTGRES_DB_EXPOSE_PORT?Variable not set}
+      - POSTGRES_DB_API=${POSTGRES_DB_API?Variable not set}
+      - POSTGRES_DB_API_USER=${POSTGRES_DB_API_USER?Variable not set}
+      - POSTGRES_DB_API_PASSWORD=${POSTGRES_DB_API_PASSWORD?Variable not set}
+      # api variable on app/config.py
+      - API_HTTP_PORT=${API_HTTP_PORT?Variable not set}
+      - API_VERSION=${API_VERSION?Variable not set}
+      - PROXY_ROOT_PATH=${PROXY_ROOT_PATH?Variable not set}
+
+# Names our volume
+volumes:
+  postgre_data:
+
+
+networks:
+  default:
+    external:
+      name: ${PROJECT_NETWORK?Variable not set}
