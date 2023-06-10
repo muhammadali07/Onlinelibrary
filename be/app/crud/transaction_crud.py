@@ -70,7 +70,7 @@ async def create_new_trasancation(request: Transactions ,user:dict, db: AsyncSes
 async def get_list_pinjman_buku(limit, page, keyword, user_info:dict, db: AsyncSession):
     async with db as session:
         try:
-            if user_info['role'] == 'admin':
+            if user_info['role'] == 'guest':
                 return ResponseOutCustom(
                     message_id="03",
                     status="Anda tidak memiliki akses",
