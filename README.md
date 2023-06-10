@@ -22,3 +22,14 @@
 2. login pada endpoint http://localhost:8888/api/v1/access/login untuk mendapatkan Token Bearer
 3. Silahkan testing API.
 4. Terima Kasih
+
+
+
+# Langkah menjalankan aplikasi/service Front End End
+1. pindah ke direktori ui
+2. jalankan perintah yarn untuk install package
+3. setelah selesai, jalankan perintah yarn dev
+4. kemudian akses http://localhost:3000/ di browser untuk melihat tampilan Front End
+
+# Disclaimer
+- API belum bisa di testing via Front End karena belum terintegrasi dengan service Back End
