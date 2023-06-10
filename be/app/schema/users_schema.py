@@ -1,7 +1,7 @@
 from pydantic import BaseModel, constr, validator, EmailStr
 
 class Users(BaseModel): #buat test create user
-    email: EmailStr
+    email: str
     username: str
     password: str
     
