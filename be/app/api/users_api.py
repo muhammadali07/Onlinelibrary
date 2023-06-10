@@ -1,20 +1,40 @@
+import re
 from schema import Users, UsersUpdate
-from fastapi import Depends, APIRouter
+from fastapi import Depends, APIRouter, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from service import get_async_session
+from service import get_async_session, ResponseOutCustom
 from crud import users_crud
 
 router = APIRouter()
+
+def validate_password(password: str) -> str:
+    if len(password) < 8:
+        raise ValueError("Password harus memiliki panjang minimal 8 karakter")
+
+    regex_pattern = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[A-Za-z0-9]+$"
+    if not re.match(regex_pattern, password):
+        raise ValueError("Password harus terdiri dari minimal 1 huruf kapital, 1 huruf kecil, dan 1 angka")
+    
+    if any(char.isalnum() is False for char in password):
+        raise ValueError("Password tidak boleh mengandung karakter khusus")
+    return password
 
 @router.post("/create-new-users", )
 async def create_new_user(
     data: Users, 
     db: AsyncSession = Depends(get_async_session)
     ):
-    out_resp = await users_crud.create_new_user(
-        data, db
-    )
-    return out_resp
+    try:
+        data.password = validate_password(data.password)
+        out_resp = await users_crud.create_new_user(data, db)
+        return out_resp
+
+    except ValueError as e:
+        return ResponseOutCustom(
+            message_id = "03",
+            status = f'{e}',
+            list_data = []
+        )
     
 @router.get("/get-list-users", )
 async def get_list_users(

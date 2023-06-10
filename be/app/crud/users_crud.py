@@ -19,6 +19,9 @@ log = loging()
 async def create_new_user(request: Users , db: AsyncSession):
     async with db as session:
         try:
+            val_user_exist = await user_exist(request.email, db)
+            if val_user_exist:
+                return val_user_exist
             
             data = users_model.Users(
                 email=request.email,
@@ -126,6 +129,22 @@ async def delete_user_by_email(data,db: AsyncSession):
             await session.commit()
 
             return ResponseOutCustom(message_id="00", status=f"Hapus data users {data} berhasil", list_data=data)
+        
+        except Exception as e:
+            return ResponseOutCustom(message_id="03", status=f'{e}', list_data=[])
+        
+
+async def user_exist(data,db: AsyncSession):
+    async with db as session:
+        try:
+            users = users_model.Users
+            query_stmt = select(users).where(users.email==data)
+            proxy_rows = await session.execute(query_stmt)
+            result = proxy_rows.scalars().first()
+
+            if result:
+                return ResponseOutCustom(message_id="02", status=f'Email sudah terdaftar', list_data=[])
+            
         
         except Exception as e:
             return ResponseOutCustom(message_id="03", status=f'{e}', list_data=[])
