@@ -1,6 +1,6 @@
 # Onlinelibrary
 
-#Langkah menjalankan aplikasi/service Back End
+# Langkah menjalankan aplikasi/service Back End
 1. cloning repo 
 2. pindah ke direktori be
 3. copy file sample.env menjadi .env
@@ -17,7 +17,7 @@
 11. untuk testing API bisa menggunakan OpenAPI Swagger yang sudah di sediakan atau bisa juga via Postman
 
 
-step testing API
+# step testing API
 1. buat user account terlebbih dahulu agar bisa akses mendapatkan token jwt pada API http://localhost:8888/api/v1/users/create-new-users
 2. login pada endpoint http://localhost:8888/api/v1/access/login untuk mendapatkan Token Bearer
 3. Silahkan testing API.
