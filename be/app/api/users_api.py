@@ -1,7 +1,7 @@
 from schema import Users, UsersUpdate
 from fastapi import Depends, APIRouter, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from service import get_async_session, ResponseOutCustom, utils
+from service import get_async_session, ResponseOutCustom, utils, verify_token
 from crud import users_crud
 
 router = APIRouter()
@@ -28,6 +28,7 @@ async def create_new_user(
     
 @router.get("/get-list-users", )
 async def get_list_users(
+    user_info : dict = Depends(verify_token),
     db: AsyncSession = Depends(get_async_session),
     limit : int = 10,
     page : int = 0,
@@ -39,6 +40,7 @@ async def get_list_users(
 @router.get("/get-user-by-email", )
 async def get_user_by_email(
     email: str,
+    user_info : dict = Depends(verify_token),
     db: AsyncSession = Depends(get_async_session)
     ):
     out_resp = await users_crud.get_users_by_email(email, db)
@@ -47,6 +49,7 @@ async def get_user_by_email(
 @router.put("/update-user-by-email", )
 async def update_user_by_email(
     data: UsersUpdate, 
+    user_info : dict = Depends(verify_token),
     db: AsyncSession = Depends(get_async_session)
     ):
     out_resp = await users_crud.update_user_by_email(data, db)
@@ -56,6 +59,7 @@ async def update_user_by_email(
 @router.delete("/delete-data-users", )
 async def delete_data_uses(
     email:str,
+    user_info : dict = Depends(verify_token),
     db: AsyncSession = Depends(get_async_session)
     ):
     out_resp = await users_crud.delete_user_by_email(email,db)

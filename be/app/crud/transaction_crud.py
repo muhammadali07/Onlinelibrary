@@ -67,9 +67,15 @@ async def create_new_trasancation(request: Transactions ,user:dict, db: AsyncSes
             return ResponseOutCustom(message_id="03", status=f"{str(e)}", list_data=[])
 
 
-async def get_list_pinjman_buku(limit, page, keyword, db: AsyncSession):
+async def get_list_pinjman_buku(limit, page, keyword, user_info:dict, db: AsyncSession):
     async with db as session:
         try:
+            if user_info['role'] == 'admin':
+                return ResponseOutCustom(
+                    message_id="03",
+                    status="Anda tidak memiliki akses",
+                    list_data=[]
+                )
             offset = page * limit
             terms = []
 

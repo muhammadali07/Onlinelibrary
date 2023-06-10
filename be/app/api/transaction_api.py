@@ -25,7 +25,7 @@ async def get_list_pinjman_buku(
     page : int = 0,
     keyword : str = ''
     ):
-    out_resp = await transaction_crud.get_list_pinjman_buku(limit, page, keyword, db)
+    out_resp = await transaction_crud.get_list_pinjman_buku(limit, page, keyword, user_info,db)
     return out_resp
 
 @router.get("/get-list-data-buku", )
