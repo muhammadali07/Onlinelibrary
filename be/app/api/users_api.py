@@ -6,10 +6,6 @@ from crud import users_crud
 
 router = APIRouter()
 
-@router.get("/")
-async def get_users(db: AsyncSession = Depends(get_async_session)):
-    return {"hello"}
-
 @router.post("/create-new-users", )
 async def create_new_user(
     data: Users, 

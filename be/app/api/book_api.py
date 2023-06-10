@@ -6,10 +6,6 @@ from crud import book_crud
 
 router = APIRouter()
 
-@router.get("/")
-async def get_book(db: AsyncSession = Depends(get_async_session)):
-    return {"hello"}
-
 @router.post("/create-new-book", )
 async def create_new_user(
     data: Book, 

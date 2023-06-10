@@ -10,6 +10,7 @@ ENV PYTHONPATH=/app \
 ADD requirements.txt .
 RUN pip install -r requirements.txt
 
+
 # Set Timezone
 RUN apk add tzdata
 ENV TZ=Asia/Jakarta
